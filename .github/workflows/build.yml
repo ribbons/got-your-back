@@ -8,8 +8,6 @@ permissions:
 on:
   push:
   pull_request:
-  schedule:
-    - cron: '37 22 * * *'
 
 defaults:
   run:
