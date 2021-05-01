@@ -3,8 +3,6 @@ name: Build and test GYB
 on:
   push:
   pull_request:
-  schedule:
-    - cron: '37 22 * * *'
 
 defaults:
   run:
