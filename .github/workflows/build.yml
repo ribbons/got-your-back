@@ -48,15 +48,6 @@ jobs:
             jid: 5
             goal: build
             arch: Win64
-          - os: [self-hosted, linux, arm64]
-            jid: 6
-            goal: build
-            arch: aarch64
-          - os: [self-hosted, linux, arm64]
-            jid: 7
-            goal: build
-            arch: aarch64
-            staticx: yes
           - os: ubuntu-22.04
             goal: test
             python: "3.9"
