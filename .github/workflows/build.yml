@@ -666,13 +666,6 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # 5.0.0
 
-      - name: VirusTotal Scan
-        uses: crazy-max/ghaction-virustotal@d34968c958ae283fe976efed637081b9f9dcf74f # 4.2.0
-        with:
-          vt_api_key: ${{ secrets.VT_API_KEY }}
-          files: |
-            gyb-binaries/*
-
       - name: Set datetime version string
         id: dateversion
         run: |
