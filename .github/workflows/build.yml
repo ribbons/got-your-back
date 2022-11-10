@@ -446,16 +446,6 @@ jobs:
               $gyb --action backup --email $gyb_user --service-account --local-folder sa-backup
               $gyb --action backup-chat --email $gyb_user
 
-      - name: VirusTotal Scan
-        uses: crazy-max/ghaction-virustotal@v3
-        if: (github.event_name == 'push' || github.event_name == 'schedule') && matrix.goal == 'build'
-        with:
-          vt_api_key: ${{ secrets.VT_API_KEY }}
-          files: |
-            *.tar.xz
-            *.zip
-            *.msi
-
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         if: (github.event_name == 'push' || github.event_name == 'schedule') && matrix.goal == 'build'
