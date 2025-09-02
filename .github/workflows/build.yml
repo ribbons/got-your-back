@@ -46,10 +46,6 @@ jobs:
             jid: 4
             goal: build
             arch: aarch64
-          - os: windows-2022
-            jid: 5
-            goal: build
-            arch: Win64
           - os: ubuntu-22.04-arm
             jid: 6
             goal: build
