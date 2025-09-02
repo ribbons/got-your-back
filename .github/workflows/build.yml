@@ -178,7 +178,7 @@ jobs:
           echo "LD_LIBRARY_PATH=${OPENSSL_INSTALL_PATH}/lib:${PYTHON_INSTALL_PATH}/lib:/usr/local/lib" >> $GITHUB_ENV
 
       - name: MacOS import developer certificates for signing
-        if: runner.os == 'macOS'
+        if: runner.os == 'macOS' && github.repository_owner == 'GAM-team'
         uses: apple-actions/import-codesign-certs@11e1bb2d3771ad8ffa8459dfe527bc26b2dd4b62 # v5.0.3
         with:
           p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
@@ -361,10 +361,6 @@ jobs:
       - name: Build GYB with PyInstaller
         if: matrix.goal == 'build'
         run: |
-             if [[ "${RUNNER_OS}" == "macOS" ]]; then
-               # Tell our spec to use our code sign certificate
-               export codesign_identity="Jay Lee"
-             fi
              "${PYTHON}" -m PyInstaller --clean --distpath=gyb gyb.spec
              if [ -x "$(command -v realpath)" ]; then
                realpath=realpath
@@ -414,18 +410,18 @@ jobs:
           mv -v gyb/gyb-staticx gyb/gyb
 
       - name: Install WinAppDriver
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && github.repository_owner == 'GAM-team'
         run: |
           choco install -y winappdriver
 
       - name: Enabled dev mode for WinAppDriver
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && github.repository_owner == 'GAM-team'
         shell: cmd
         run : |
          reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v "AllowDevelopmentWithoutDevLicense" /d "1"
 
       - name: Install appium and totp tools
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && github.repository_owner == 'GAM-team'
         run: |
           echo "Installing appium..."
           npm install -g appium
@@ -437,7 +433,7 @@ jobs:
           appium driver install windows
 
       - name: Install Certum MSI
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && github.repository_owner == 'GAM-team'
         shell: pwsh
         run: |
           $url = "https://files.certum.eu/software/SimplySignDesktop/Windows/9.3.2.67/SimplySignDesktop-9.3.2.67-64-bit-en.msi"
@@ -450,7 +446,7 @@ jobs:
           $procLog.Kill()
 
       - name: Login to Certum
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && github.repository_owner == 'GAM-team'
         shell: pwsh
         env:
           TOTP_SECRET: ${{ secrets.TOTP_SECRET }}
@@ -468,7 +464,7 @@ jobs:
           Start-Sleep 10
 
       - name: Sign gyb.exe
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && github.repository_owner == 'GAM-team'
         shell: pwsh
         run: |
           write-Host "Signing ${env:gyb}...."
@@ -480,7 +476,7 @@ jobs:
           & 'C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\signtool.exe' verify /pa /v "$env:gyb"
 
       - name: MacOS send binary for Apple notarization
-        if: runner.os == 'macOS'
+        if: runner.os == 'macOS' && github.repository_owner == 'GAM-team'
         env:
           ASP_NOTARIZE: ${{ secrets.ASP_NOTARIZE }}
         run: |
@@ -544,7 +540,7 @@ jobs:
           echo "MSI_FILENAME=${MSI_FILENAME}" >> $GITHUB_ENV
 
       - name: Sign GYB MSI
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && github.repository_owner == 'GAM-team'
         shell: pwsh
         run: |
           write-Host "Signing ${env:MSI_FILENAME}...."
