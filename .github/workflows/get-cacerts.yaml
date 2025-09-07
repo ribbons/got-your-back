@@ -16,6 +16,7 @@ defaults:
 
 jobs:
   check-certs:
+    if: github.repository_owner == 'GAM-team'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v5.0.0
