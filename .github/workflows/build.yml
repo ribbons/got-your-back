@@ -129,7 +129,7 @@ jobs:
           echo "COMPILED_OPENSSL_VERSION=${{ steps.setup-python.outputs.openssl-version }}" >> $GITHUB_ENV
 
       - name: MacOS import developer certificates for signing
-        if: runner.os == 'macOS'
+        if: runner.os == 'macOS' && github.repository_owner == 'GAM-team'
         uses: apple-actions/import-codesign-certs@11e1bb2d3771ad8ffa8459dfe527bc26b2dd4b62 # v5.0.3
         with:
           p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
@@ -177,9 +177,6 @@ jobs:
       - name: Build GYB with PyInstaller
         if: matrix.goal == 'build'
         run: |
-          if [[ "${RUNNER_OS}" == "macOS" ]]; then
-            export codesign_identity="Jay Lee"
-          fi
           if [[ "$staticx" != "yes" ]]; then
             export PYINSTALLER_BUILD_ONEDIR=yes
           fi
@@ -243,7 +240,7 @@ jobs:
 
       - name: Setup Certum Code Signing
         id: certum
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && github.repository_owner == 'GAM-team'
         uses: jay0lee/certum-cloud-code-sign@a3324503499c49090869856eeeecfe95fb613d87 # v1
         with:
           username: ${{ secrets.CERTUM_USERNAME || 'jay0lee@gmail.com' }}
@@ -252,7 +249,7 @@ jobs:
           debug: 'false'
 
       - name: Sign Windows Binaries
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && github.repository_owner == 'GAM-team'
         shell: pwsh
         run: |
           $signtool = "${{ steps.certum.outputs.signtool-path }}"
@@ -291,7 +288,7 @@ jobs:
           & "$signtool" verify /pa /v "$env:gyb"
 
       - name: MacOS send binary for Apple notarization
-        if: runner.os == 'macOS'
+        if: runner.os == 'macOS' && github.repository_owner == 'GAM-team'
         env:
           APPLE_KEY: ${{ secrets.APPLE_KEY }}
           APPLE_KEY_ID: ${{ secrets.APPLE_KEY_ID }}
@@ -367,7 +364,7 @@ jobs:
           cd ..
 
       - name: Windows package exe with Inno Setup
-        if: runner.os == 'Windows' && matrix.goal == 'build'
+        if: runner.os == 'Windows' && matrix.goal == 'build' && github.repository_owner == 'GAM-team'
         run: |
           choco install innosetup
           signtool="${{ steps.certum.outputs.signtool-path }}"
@@ -410,7 +407,7 @@ jobs:
           echo "We successfully compiled Python ${this_python} and OpenSSL ${this_openssl}"
 
       - name: Test Windows Inno Setup installer
-        if: runner.os == 'Windows' && matrix.goal == 'build'
+        if: runner.os == 'Windows' && matrix.goal == 'build' && github.repository_owner == 'GAM-team'
         shell: pwsh
         run: |
           $installer = Get-ChildItem -Filter "gyb-*-windows-*.exe" | Select-Object -First 1
@@ -479,7 +476,7 @@ jobs:
             gyb*.exe
 
       - name: Teardown SimplySign Desktop Session
-        if: always() && runner.os == 'Windows'
+        if: always() && runner.os == 'Windows' && github.repository_owner == 'GAM-team'
         uses: jay0lee/certum-cloud-code-sign/teardown@a3324503499c49090869856eeeecfe95fb613d87 # v1
 
   merge:
