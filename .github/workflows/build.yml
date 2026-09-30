@@ -494,7 +494,7 @@ jobs:
           pattern: gyb-binaries-*
 
   publish:
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.repository_owner == 'GAM-team'
     runs-on: ubuntu-24.04
     needs: merge
     permissions:
